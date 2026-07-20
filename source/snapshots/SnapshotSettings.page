@@ -14,7 +14,7 @@ $cfg = parse_plugin_cfg($sName);
 
 _(Excluded volumes by path)_:
 <!-- : <span style="margin:0 8px 0 20px;font-weight:bold">_(Excluded folders)_:</span> -->
-: <input type="text" name="exclude" value="<?=$cfg['exclude']?>" class="narrow">
+: <input type="text" name="exclude" value="<?=$cfg['exclude']?>" class="wide" style="width: 100%; max-width: 600px;">
   <span class="fa fa-question-circle fa-fw" onclick="HelpButton();return false;"></span>
 
 <blockquote class="inline_help" style="display: none;">
