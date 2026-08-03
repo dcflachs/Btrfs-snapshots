@@ -46,10 +46,20 @@ table.snapshot tr td:empty {  width: 50px; }
 	table.snapshot tr>td+td{text-align:center;}
 	table.snapshot tr>td+td+td{text-align:center;}
 	table.snapshot tr>td+td+td+td{text-align:center;}
+	table.snapshot tr>td+td+td+td+td{text-align:center;}
+	table.snapshot tr>td+td+td+td+td+td{text-align:center;}
 	table.snapshot tr>td+td+td+td+td+td+td{text-align:center;}
-	table.snapshot tr>td+td+td+td+td+td+td+td{text-align:center;}
-	table.snapshot tr>td+td+td+td+td+td+td+td+td{text-align:left;}
-	table.snapshot tr>td+td+td+td+td+td+td+td+td+td+td+td{text-align:center;}
+	table.snapshot tr>td+td+td+td+td+td+td+td{text-align:left;}
+
+/* Column width overrides */
+table.snapshot thead tr>td:nth-child(1) { width: 35%; }
+table.snapshot thead tr>td:nth-child(2) { width: 30%; }
+table.snapshot thead tr>td:nth-child(3) { width: 5%; } /* Read Only */
+table.snapshot thead tr>td:nth-child(4) { width: 5%; } /* Remove */
+/* col 5 = Create, keep default 8% */
+table.snapshot thead tr>td:nth-child(6) { width: 5%; } /* Settings */
+table.snapshot thead tr>td:nth-child(7) { width: 5%; } /* Schedule */
+table.snapshot thead tr>td:nth-child(8) { width: 5%; } /* Browse */
 
 	button.mount {padding:2px 4px 3px 6px;margin:1px 0px 1px 0px;}
 	i.partition-hdd{margin:5px; 0px; 0px; 0px;}

@@ -57,7 +57,7 @@ case 'sv2':
    $config_file = $GLOBALS["paths"]["subvol_settings"];
 	$volsettings = @parse_ini_file($config_file, true);
       
-   echo "<thead><tr><td>"._("Volume/Sub Volume/Snapshot")."<td>"._('Snapshot prefix')."</td><td>"._('Send To Path')."</td><td>"._('Read only')."</td><td>"._('Remove')."</td><td>"._('Create')."</td><td>"._('Settings')."</td><td>"._('Schedule')."</td><td>"._('Browse')."</td>" ;
+   echo "<thead><tr><td>"._("Volume/Sub Volume/Snapshot")."<td>"._('Snapshot prefix')."</td><td>"._('Read only')."</td><td>"._('Remove')."</td><td>"._('Create')."</td><td>"._('Settings')."</td><td>"._('Schedule')."</td><td>"._('Browse')."</td>" ;
 
    echo "</tr></thead>";
    echo "<tbody><tr>";
@@ -72,7 +72,7 @@ case 'sv2':
       #echo "<tr><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$vline["vol"]["vol"].'/')."</td>tr>";
       if (is_array($vline)) ksort($vline) ;
       
-      echo "<tr><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td><td></td></td><td><a href=\"Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td><tr>";
+      echo "<tr><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td></td><td></td><td><a href=\"Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td></tr>";
       
       $ct = "<td title='"._("Remove Subvolume")."'><a style='color:#CC0000;font-weight:bold;cursor:pointer;'  onclick='delete_subvolume(\"{$key}\")'><i class='fa fa-remove hdd'></a>";
       if ($vline != NULL) {
@@ -101,15 +101,7 @@ case 'sv2':
          echo $subvoldft ;
          echo "</td>" ;
 
-         if (isset($volsettings[$path]["sendto"])) {
-            $subvolsendto = $volsettings[$path]["sendto"] ;
-         } else { $subvolsendto = _("Undefined") ;}
-         echo '<td>' ;
-         echo $subvolsendto ;
-         echo "</td>" ;
-
-         echo '<td><input type="checkbox" '.$checked.' onclick="OnChangeCheckbox (this)" value="'.$path.'">'."</td>" ;
-        # echo '<td><input type="checkbox" '.$checked.' onclick="ro_subvolume (this)" value="'.urlencode($path).'">'."</td>" ;
+         echo '<td><input type="checkbox" '.$checked.' disabled>'."</td>" ;
 
          echo "<td title='"._("Delete Subvolume")."'><a style='color:#CC0000;font-weight:bold;cursor:pointer;'  onclick='delete_subvolume(\"{$remove}\")'><i class='fa fa-remove hdd'></a>" ;
          $mpoint			.= "<i class='fa fa-pencil partition-hdd'></i><a title='"._("Change Disk Mount Point")."' class='exec' onclick='chg_mountpoint(\"{$partition['serial']}\",\"{$partition['part']}\",\"{$device}\",\"{$partition['fstype']}\",\"{$mount_point}\",\"{$disk_label}\");'>{$mount_point}</a>";
@@ -152,12 +144,6 @@ case 'sv2':
          echo $slotsubvoldft ;
          echo "</td>" ;
 
-         if (isset($slotdetail["subvolsendto"]) && $slotdetail["subvolsendto"] != "") {
-            $slotsubvolsendto = $slotdetail["subvolsendto"] ;
-         } else { $slotsubvolsendto = _("Default") ;}
-         echo '<td>' ;
-         echo $slotsubvolsendto ;
-         echo "</td>" ;
          echo "<td></td>" ;
        echo  "<td title='"._("Remove Schedule Slot")." {$slot}'><a style='color:#CC0000;font-weight:bold;cursor:pointer;'  onclick='delete_schedule_slot(\"{$path}\",\"{$slot}\")'><i class='fa fa-remove hdd'></a>";
 
@@ -219,7 +205,7 @@ case 'sv2':
       } else {
       $toggle = "<span class='exec toggle-rmtip' snapvol='{$snapvol}'><i class='fa fa-minus-square fa-append'></i></span>" ;
       }
-      if ($snapdetal["subvolume"] != null ) { if (count($snapdetail["subvolume"] ) >0) echo "<tr><td>\t  ".$snap._("(Snapshots)").$toggle.' </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>' ; }
+      if ($snapdetal["subvolume"] != null ) { if (count($snapdetail["subvolume"] ) >0) echo "<tr><td>\t  ".$snap._("(Snapshots)").$toggle.' </td><td></td><td></td><td></td><td></td><td></td><td></td></tr>' ; }
       
         
          foreach ($snapdetail["subvolume"] as $subvolname=>$subvoldetail) {
@@ -231,18 +217,16 @@ case 'sv2':
             if ($_COOKIE[$snapvol] == "true" || !isset($_COOKIE[$snapvol])) $style = "  " ; else $style = " hidden "  ;
             $hostport = $snapvol ;
             echo "<tr class='toggle-parts toggle-rmtip-".$hostport."' name='toggle-rmtip-".$hostport."'".$style.">" ;
-            echo "<td>\t\t".$subvolname."</td><td></td>" ;
+            echo "<td>\t\t".$subvolname."</td>" ;
 
-            if ($subvoldetail["incremental"] != "" ) echo 'Parent:'.$subvoldetail["incremental"] ;
-            echo "</td>" ;
-            echo '<td>' ; echo "</td>" ;
+            $parentinfo = ($subvoldetail["incremental"] != "" ) ? 'Parent:'.$subvoldetail["incremental"] : '' ;
+            echo "<td>".$parentinfo."</td>" ;
             $remove = $subvoldetail["vol"]."/".$subvolname ;
             $path=$subvoldetail["vol"].'/'.$subvolname ;
-            echo '<td><input type="checkbox"'.$checked.' onclick="OnChangeCheckbox (this)" value="'.$path.'">'."</td>" ;
-
+            echo '<td><input type="checkbox"'.$checked.' disabled>'."</td>" ;
 
             echo '<td><input type="checkbox" class="removes snaps".$i++." name="snapshot"  value="'.$remove.'" </td>'  ;
-            echo '</td>' ;
+
             $dftsend = "/mnt/VMs/test" ;
             if ($subvolsendto != _("Undefined")) {
                $dftsend=$subvolsendto ;
@@ -254,7 +238,7 @@ case 'sv2':
             $parmvol = $subvoldetail["parent"];
             $parminc="{$path}\",\"{$dftsend}\",\"{$parmpath}\",\"{$parmvol}" ;
 
-            echo "</td><td> ".make_button("Send", "send_snapshot", $parm)."</td><td></td><td></td>" ;
+            echo "<td> ".make_button("Send", "send_snapshot", $parm)."</td><td></td><td></td>" ;
             #echo "</td><td> ".make_button("Send", "send_snapshot", $parm).make_button("Send Inc", "send_inc_snapshot", $parminc)."</td><td></td><td></td>" ;
          
             echo "<td><a href=\"Snapshots/Browse?dir=".urlencode($path)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($path)."\"></i></a></td></tr>";
