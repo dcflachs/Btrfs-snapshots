@@ -70,6 +70,26 @@ table.snapshot thead tr>td:nth-child(8) { width: 5%; } /* Browse */
 	.exec{cursor: pointer;}
 	i.fa-append{margin:0px;font-size: 0.8em;position: relative; left:-0.3em;top:0.7em;}
 	.underline{text-decoration: underline;}
+
+	/* Table level visual distinction */
+	table.snapshot thead tr.snap-header td {
+		background-color: #2d2d3f;
+		color: #e8e8e8;
+		font-weight: bold;
+	}
+	table.snapshot tr.snap-mountpoint td {
+		background-color: #e4e9ef;
+		font-weight: bold;
+	}
+	table.snapshot tr.snap-subvolume td {
+		background-color: #fafbfc;
+		font-weight: normal;
+	}
+	table.snapshot tr.snap-schedule td {
+		background-color: #f2f5e8;
+		font-style: italic;
+		color: #6b7c3d;
+	}
 </style>
 
 

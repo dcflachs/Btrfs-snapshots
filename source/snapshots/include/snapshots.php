@@ -57,7 +57,7 @@ case 'sv2':
    $config_file = $GLOBALS["paths"]["subvol_settings"];
 	$volsettings = @parse_ini_file($config_file, true);
       
-   echo "<thead><tr><td>"._("Volume/Sub Volume/Snapshot")."<td>"._('Snapshot prefix')."</td><td>"._('Read only')."</td><td>"._('Remove')."</td><td>"._('Create')."</td><td>"._('Settings')."</td><td>"._('Schedule')."</td><td>"._('Browse')."</td>" ;
+   echo "<thead><tr class='snap-header'><td>"._("Volume/Sub Volume/Snapshot")."<td>"._('Snapshot prefix')."</td><td>"._('Read only')."</td><td>"._('Remove')."</td><td>"._('Create')."</td><td>"._('Settings')."</td><td>"._('Schedule')."</td><td>"._('Browse')."</td>" ;
 
    echo "</tr></thead>";
    echo "<tbody><tr>";
@@ -72,7 +72,7 @@ case 'sv2':
       #echo "<tr><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$vline["vol"]["vol"].'/')."</td>tr>";
       if (is_array($vline)) ksort($vline) ;
       
-      echo "<tr><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td></td><td></td><td><a href=\"Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td></tr>";
+      echo "<tr class='snap-mountpoint'><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td></td><td></td><td><a href=\"Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td></tr>";
       
       $ct = "<td title='"._("Remove Subvolume")."'><a style='color:#CC0000;font-weight:bold;cursor:pointer;'  onclick='delete_subvolume(\"{$key}\")'><i class='fa fa-remove hdd'></a>";
       if ($vline != NULL) {
@@ -91,7 +91,7 @@ case 'sv2':
          }
 
          if ($snap != "~RECEIVED" && $snap!= "~INCREMENTAL") {
-         echo "<tr><td>\t".$snap.'</td>' ;
+         echo "<tr class='snap-subvolume'><td>\t".$snap.'</td>' ;
          
 
       if (isset($volsettings[$path]["default"])) {
@@ -135,7 +135,7 @@ case 'sv2':
       # Show Schedule Slots upto 10.
       foreach($slots as $slot=>$slotdetail) {
 
-       echo "<tr><td>\t  Schedule Slot: {$slot}</td>" ;
+       echo "<tr class='snap-schedule'><td>\t  Schedule Slot: {$slot}</td>" ;
 
        if (isset($slotdetail["subvolprefix"]) && $slotdetail["subvolprefix"] != "" ) {
          $slotsubvoldft = $slotdetail["subvolprefix"];
