@@ -115,7 +115,7 @@ case 'sv2':
          } else {
          $subvol=$path ;
          }
-         $parm="{$path}\",\"{$subvol}" ;
+         $parm="{$path}\",\"".addslashes($subvol) ;
       
 
          $slots=get_subvol_schedule_slots($path) ;
