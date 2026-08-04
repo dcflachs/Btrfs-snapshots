@@ -72,7 +72,10 @@ case 'sv2':
       #echo "<tr><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$vline["vol"]["vol"].'/')."</td>tr>";
       if (is_array($vline)) ksort($vline) ;
       
-      echo "<tr class='snap-mountpoint'><td>".preg_replace('/\]  +/',']',$key)."</td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td></td><td></td><td><a href=\"Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td></tr>";
+      $mountpoint_display = preg_replace('/\]  +/',']',$key);
+      echo "<tr class='snap-mountpoint'><td title='".htmlspecialchars($mountpoint_display)."'>".$mountpoint_display."</td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td></td><td></td><td><a href=\"Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td></tr>";
+      
+      $ct = "<td title='"._("Remove Subvolume")."'><a style='color:#CC0000;font-weight:bold;cursor:pointer;'  onclick='delete_subvolume(\"{$key}\")'><i class='fa fa-remove hdd'></a>";
       
       $ct = "<td title='"._("Remove Subvolume")."'><a style='color:#CC0000;font-weight:bold;cursor:pointer;'  onclick='delete_subvolume(\"{$key}\")'><i class='fa fa-remove hdd'></a>";
       if ($vline != NULL) {
@@ -91,13 +94,14 @@ case 'sv2':
          }
 
          if ($snap != "~RECEIVED" && $snap!= "~INCREMENTAL") {
-         echo "<tr class='snap-subvolume'><td>\t".$snap.'</td>' ;
+         $col1_text = "\t".$snap;
+         echo "<tr class='snap-subvolume'><td title='".htmlspecialchars($snap)."'>".$col1_text.'</td>' ;
          
 
       if (isset($volsettings[$path]["default"])) {
          $subvoldft = $volsettings[$path]["default"] ;
       } else { $subvoldft = _("Undefined") ;}
-         echo '<td>' ;
+         echo '<td title="' . htmlspecialchars($subvoldft) . '">' ;
          echo $subvoldft ;
          echo "</td>" ;
 
@@ -140,7 +144,7 @@ case 'sv2':
        if (isset($slotdetail["subvolprefix"]) && $slotdetail["subvolprefix"] != "" ) {
          $slotsubvoldft = $slotdetail["subvolprefix"];
       } else { $slotsubvoldft = _("Default") ;}
-         echo '<td>' ;
+         echo '<td title="' . htmlspecialchars($slotsubvoldft) . '">' ;
          echo $slotsubvoldft ;
          echo "</td>" ;
 

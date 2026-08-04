@@ -61,6 +61,19 @@ table.snapshot thead tr>td:nth-child(6) { width: 5%; } /* Settings */
 table.snapshot thead tr>td:nth-child(7) { width: 5%; } /* Schedule */
 table.snapshot thead tr>td:nth-child(8) { width: 5%; } /* Browse */
 
+/* Column 1: preserve indentation but wrap/contain within column width */
+table.snapshot td:nth-child(1) {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+/* Truncate long text in second column with ellipsis + hover tooltip */
+table.snapshot td:nth-child(2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 	button.mount {padding:2px 4px 3px 6px;margin:1px 0px 1px 0px;}
 	i.partition-hdd{margin:5px; 0px; 0px; 0px;}
 	i.hdd{margin:5px; 0px; 0px; 0px;}
