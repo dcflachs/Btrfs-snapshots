@@ -73,7 +73,7 @@ case 'sv2':
       if (is_array($vline)) ksort($vline) ;
       
       $mountpoint_display = preg_replace('/\]  +/',']',$key);
-      echo "<tr class='snap-mountpoint'><td title='".htmlspecialchars($mountpoint_display)."'>".$mountpoint_display."</td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td></td><td></td><td><a href=\"Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td></tr>";
+      echo "<tr class='snap-mountpoint'><td title='".htmlspecialchars($mountpoint_display)."'>".$mountpoint_display."</td><td></td><td></td><td></td><td>".make_button("Create Subvolume", "create_subvolume" ,$key.'/')."</td><td></td><td></td><td><a href=\"/Shares/Browse?dir=/mnt/user/".urlencode($name)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($name)."\"></i></a></td></tr>";
       
       $ct = "<td title='"._("Remove Subvolume")."'><a style='color:#CC0000;font-weight:bold;cursor:pointer;'  onclick='delete_subvolume(\"{$key}\")'><i class='fa fa-remove hdd'></a>";
       
@@ -133,7 +133,7 @@ case 'sv2':
       } else {
       echo "<td></td>" ;
       }
-      echo "<td><a href=\"Browse?dir=".urlencode($path)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." ".$path."\"></i></a></td></tr>";
+      echo "<td><a href=\"/Shares/Browse?dir=".urlencode($path)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." ".$path."\"></i></a></td></tr>";
 
   
       # Show Schedule Slots upto 10.
@@ -245,7 +245,7 @@ case 'sv2':
             echo "<td> ".make_button("Send", "send_snapshot", $parm)."</td><td></td><td></td>" ;
             #echo "</td><td> ".make_button("Send", "send_snapshot", $parm).make_button("Send Inc", "send_inc_snapshot", $parminc)."</td><td></td><td></td>" ;
          
-            echo "<td><a href=\"Snapshots/Browse?dir=".urlencode($path)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($path)."\"></i></a></td></tr>";
+            echo "<td><a href=\"/Shares/Browse?dir=".urlencode($path)."\"><i class=\"icon-u-tab\" title=\""._('Browse')." /mnt/user/".urlencode($path)."\"></i></a></td></tr>";
          }
       }
          } else {
