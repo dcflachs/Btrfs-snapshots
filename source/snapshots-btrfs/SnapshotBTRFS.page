@@ -1,4 +1,4 @@
-Menu="Snapshots:01"
+Menu="Snapshots-BTRFS:01"
 Title="BTRFS Volumes"
 icon="fa-clone"
 ---
@@ -12,7 +12,7 @@ icon="fa-clone"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-$plugin = "snapshots";
+$plugin = "snapshots-btrfs";
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 $translations = file_exists("$docroot/webGui/include/Translations.php");
 require_once "$docroot/plugins/$plugin/include/Legacy.php";
@@ -22,7 +22,7 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?else:?>
 <?
 /* read translations */
-parse_plugin('snapshots');
+parse_plugin('snapshots-btrfs');
 global $btrfs_volumes ;
 ?>
 <script type="text/javascript" src="<?autov('/webGui/javascript/jquery.switchbutton.js')?>"></script>
@@ -121,7 +121,7 @@ table.snapshot td:nth-child(2) {
 
 $(function(){
 
-// $('#sv2').load('/plugins/snapshots/include/snapshots.php',{table:'sv2' , hideroot:hideroot}); 
+// $('#sv2').load('/plugins/snapshots-btrfs/include/snapshots.php',{table:'sv2' , hideroot:hideroot}); 
 
 
 
@@ -132,7 +132,7 @@ $(function(){
 		tr = $(this);
 
 	
-		tr.find("span.toggle-snapshots").click(function(e)
+		tr.find("span.toggle-snapshots-btrfs").click(function(e)
 		{
 			$(this).disableSelection();hostport = $(this).attr("snapvol");el = $(this);
 			$(".toggle-snaps-"+hostport).slideToggle(0,function(){
@@ -257,7 +257,7 @@ $(function(){
 
 function removeSnapshot() {
   var elements = document.getElementById("SnapBTRFS").elements;
-  var string ="/plugins/snapshots/include/removeSnapshot.php?Snaps=" ;
+  var string ="/plugins/snapshots-btrfs/include/removeSnapshot.php?Snaps=" ;
   for (var i = 0, element; element = elements[i++];) {
     if (element.type === "checkbox" && element.value !=="" && element.checked === true)
 	if (element.name === "snapshot") 

@@ -1,29 +1,53 @@
 <?xml version='1.0' standalone='yes'?>
-
 <!DOCTYPE PLUGIN [
-<!ENTITY name      "snapshots">
-<!ENTITY author    "SimonFair">
-<!ENTITY version   "2023.06.30">
-<!ENTITY launch    "Tools/Snapshots">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/Snapshots/main">
-<!ENTITY pluginURL "&gitURL;/snapshots.plg">
-<!ENTITY supportURL	"https://forums.unraid.net/topic/114600-plugin-snapshots/">
-<!ENTITY packages	"/boot/config/plugins/&name;/packages">
-<!ENTITY md5		"6d480799f1a3fa668790091819f9468f">
+<!ENTITY name        "snapshots-btrfs">
+<!ENTITY author      "dcflachs">
+<!ENTITY version     "2026.10.18">
+<!ENTITY launch      "Tools/Snapshots-Btrfs">
+<!ENTITY packageVER  "&version;">
+<!ENTITY packageMD5  "1df5928c21cc9ec4af5bda0a1f11e5da">
+<!ENTITY packageName "&name;-package-&packageVER;">
+<!ENTITY packagefile "&packageName;.txz">
+<!ENTITY github      "dcflachs/Btrfs-snapshots">
+<!ENTITY pluginURL   "https://raw.githubusercontent.com/&github;/default/&name;.plg">
+<!ENTITY packageURL  "https://github.com/&github;/releases/download/&version;/&packagefile;">
+<!ENTITY pluginLOC   "/boot/config/plugins/&name;">
+<!ENTITY emhttpLOC   "/usr/local/emhttp/plugins/&name;">
 ]>
 
-<PLUGIN name="&name;"
-		author="&author;"
-		launch="&launch;"
-		version="&version;"
-		pluginURL="&pluginURL;"
-		support="&supportURL;"
-		icon="fa-clone"
-		min="6.8.0">
+<PLUGIN  name="&name;"
+         author="&author;"
+         version="&version;"
+         launch="&launch;"
+         pluginURL="&pluginURL;"
+         icon="fa-clone"
+         min="6.8.0"
+>
 
 <CHANGES>
-##Snapshots
-###&version;
+##Snapshots-Btrfs
+###2026.10.18
+
+  - Remove Browse Page in favor of using the built in Unraid File Browser.
+  - Rework UI styling.
+  - Fix long standing issue in prefix template.
+  - Removed ZFS support, now only supports BTRFS.
+  - Restructure repository.
+  - Forked from Snapshots by simonfair.
+
+###2026.05.12
+
+  - Fix missing toggles on 7.2+
+
+2023.07.16
+
+  - Fix Nested subvol retention processing.
+
+2023.07.01
+
+  - Fix removing VMs from schedule.
+
+2023.06.30b
 
   - Add Settings page and exclusion option from PR by primeval_god thanks.
   - Add Disable options for VM Actions.
@@ -77,14 +101,14 @@
 
 </CHANGES>
 
-<FILE Name="/boot/config/plugins/&name;/subvol.cfg">
+<FILE Name="&pluginLOC;/subvol.cfg">
 <INLINE>
 <![CDATA[
 ]]>
 </INLINE>
 </FILE>
 
-<FILE Name="/boot/config/plugins/&name;/subvolsch.cfg">
+<FILE Name="&pluginLOC;/subvolsch.cfg">
 <INLINE>
 <![CDATA[
 ]]>
@@ -102,16 +126,16 @@ Snapshots background start script.
 <INLINE>
 #!/bin/bash
 # Copy configuration files to tmp file system.
-/usr/local/emhttp/plugins/&name;/scripts/copy_config.sh 2>/dev/null
+&emhttpLOC;/scripts/copy_config.sh 2>/dev/null
 </INLINE>
 </FILE>
 
 <!--
 Get the plugin bundle.
 -->
-<FILE Name="&packages;/&name;-&version;.txz" Run="upgradepkg --install-new &packages;/&name;*%&packages;/&name;-&version;.txz">
-<URL>"&gitURL;/&name;-&version;.txz"</URL>
-<MD5>&md5;</MD5>
+<FILE Name="&pluginLOC;/&packagefile;" Run="upgradepkg --install-new">
+<URL>&packageURL;</URL>
+<MD5>&packageMD5;</MD5>
 </FILE>
 
 <!--
@@ -122,22 +146,22 @@ The 'post-updgrade' script.
 echo "Removing previous versons now upgrade has completed."
 echo
 # Remove old 'bundle' files.
-rm -f $(ls &packages;/*.txz 2>/dev/null | grep -v '&version;')
+rm -f $(ls &pluginLOC;/*.txz 2>/dev/null | grep -v '&version;')
 </INLINE>
 </FILE>
 
 <FILE Run="/bin/bash">
 <INLINE>
 
-mkdir /boot/config/plugins/&name; 2>/dev/null
-mkdir /usr/local/emhttp/plugins/&name; 2>/dev/null
+mkdir &pluginLOC; 2>/dev/null
+mkdir &emhttpLOC; 2>/dev/null
 mkdir -p /tmp/&name;/config 2>/dev/null
 
 # Adjust plugin permissions.
-chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
+chmod 755 -R &emhttpLOC; 2>/dev/null
 
 # Fix permissions of executable files
-chmod +x /usr/local/emhttp/plugins/&name;/scripts/* /usr/local/emhttp/plugins/&name;/event/*
+chmod +x &emhttpLOC;/scripts/* &emhttpLOC;/event/*
 
 # Copy Config to tmp 
 at -M -f /tmp/start_snapshots now 2>/dev/null
@@ -146,7 +170,8 @@ echo
 echo "-----------------------------------------------------------"
 echo " &name; has been installed."
 echo " "
-echo " Copyright 2016-2020, &author;"
+echo " Copyright 2016-2020, simonfair"
+echo " Maintained by: &author;"
 echo " Version: &version;"
 echo ""
 echo "-----------------------------------------------------------"
@@ -161,22 +186,21 @@ The 'remove' script.
 <INLINE>
 
 # Remove installed packages
-find "&packages;/" -type f -iname "*.txz" -delete
+find "&pluginLOC;/packages/" -type f -iname "*.txz" -delete
 
 rm -f /tmp/plugins/&name;.plg 
 rm -r /tmp/&name;
-rm  -f /boot/config/plugins/&name;/*.cron 
+rm  -f &pluginLOC;/*.cron 
 update_cron
 
 # Remove all plugin files from emhttp.
-removepkg &packages;/&name;-&version;.txz 
+removepkg &pluginLOC;/&packagefile; 
 
 echo 
 echo "-----------------------------------------------------------"
 echo " &name; has been uninstalled."
 echo "-----------------------------------------------------------"
-echo 
-
+echo
 </INLINE>
 </FILE>
 

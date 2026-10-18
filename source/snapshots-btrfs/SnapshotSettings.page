@@ -2,10 +2,10 @@ Icon="fa-clone"
 Author="dcflachs"
 Title="Settings"
 Type="xmenu"
-Menu="Snapshots:20"
+Menu="Snapshots-BTRFS:20"
 ---
 <?php 
-$sName = "snapshots";
+$sName = "snapshots-btrfs";
 $cfg = parse_plugin_cfg($sName);
 ?>
 

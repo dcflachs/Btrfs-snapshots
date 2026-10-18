@@ -1,3 +1,3 @@
-**Snapshots**
+**Snapshots-BTRFS**
 
-This plugin provides Snapshots for Unraid.  
+This plugin provides BTRFS Snapshots for Unraid.  

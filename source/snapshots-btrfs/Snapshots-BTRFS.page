@@ -1,5 +1,5 @@
 Menu="SnapshotInformation"
-Title="Snapshots"
+Title="SnapshotsBTRFS"
 Type="xmenu"
 Tabs="true"
 Icon="fa-clone"

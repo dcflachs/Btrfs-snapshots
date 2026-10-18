@@ -9,13 +9,13 @@
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-$plugin = "snapshots";
+$plugin = "snapshots-btrfs";
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 $translations = file_exists("$docroot/webGui/include/Translations.php");
 
 if ($translations) {
 	/* add translations */
-	$_SERVER['REQUEST_URI'] = 'snapshots';
+	$_SERVER['REQUEST_URI'] = 'snapshots-btrfs';
 	require_once "$docroot/webGui/include/Translations.php";
 } else {
 	/* legacy support (without javascript) */
@@ -23,7 +23,7 @@ if ($translations) {
 	require_once "$docroot/plugins/$plugin/include/Legacy.php";
 }
 
-require_once "plugins/snapshots/include/lib.php";
+require_once "plugins/snapshots-btrfs/include/lib.php";
 require_once("webGui/include/Helpers.php");
 $arg1 = $argv[1];
 $arg2 = $argv[2];
@@ -128,24 +128,22 @@ foreach($vms as $vm) {
 			exec ('virsh dompmsuspend "'.$vm.'" disk'." 2>&1", $vm_output) ;
 			if ($logging == "yes") snap_manager_log("VM ".$vm.' State is :'.$vm_output[0]." Being Hibernated");
 			break ;
-		default:
-			break ;
 		}				
 
 	}
 } 
 }
 /* 
-#root@computenode:/usr/local/emhttp/plugins/snapshots/include# virsh suspend "Windows 11"
+#root@computenode:/usr/local/emhttp/plugins/snapshots-btrfs/include# virsh suspend "Windows 11"
 #Domain 'Windows 11' suspended
 
-#root@computenode:/usr/local/emhttp/plugins/snapshots/include# virsh resume "Windows 11"
+#root@computenode:/usr/local/emhttp/plugins/snapshots-btrfs/include# virsh resume "Windows 11"
 #Domain 'Windows 11' resumed
 
-#root@computenode:/usr/local/emhttp/plugins/snapshots/include# virsh shutdown "Windows 11"
+#root@computenode:/usr/local/emhttp/plugins/snapshots-btrfs/include# virsh shutdown "Windows 11"
 #Domain 'Windows 11' is being shutdown
 
-#root@computenode:/usr/local/emhttp/plugins/snapshots/include# virsh start "Windows 11"
+#root@computenode:/usr/local/emhttp/plugins/snapshots-btrfs/include# virsh start "Windows 11"
 #Domain 'Windows 11' started
 
 */
@@ -188,16 +186,11 @@ if ($dummyrun == true)
 $parents=subvol_parents() ;
 $parent=$parents[$subvol]["vol"].'/' ;
 $lines[]=$parent ;
-if ($parent == "/") {
-	$subvol_save = substr($subvol,0,-1) ;
-	$parents[$subvol_save]["vol"] = $subvol_save ;
-	$parent = $subvol ;
-} else $subvol_save =  $subvol ;
 exec(' df -t btrfs --output="target" ',$df);
 
 $list = build_list3($df) ;
 
-$list=$list[$parents[$subvol_save]["vol"]][$subvol_save]["subvolume"]??[] ;
+$list=$list[$parents[$subvol]["vol"]][$subvol]["subvolume"] ;
 
 $snaps_save=array_reverse($list) ;
 
@@ -210,13 +203,6 @@ if ($DateTimeF == "YMD") $DateTime = "YmdHis" ; else $DateTime = $DateTimeF ;
 
 $ymd = date($DateTime, time());
 $snapshoty = str_replace("{".$DateTimeF."}", $ymd, $snapshot);
-
-# Check To Directory exists.
-
-$slashpos = substr(strrchr($snapshot,'/'), 1);
-$directory = substr($snapshot, 0, - strlen($slashpos));
-if (!is_dir($directory)) mkdir($directory, 0777, true) ;
-
 
 if ($tag != "") { $snapshoty .= ".".$tag ;}  
 
@@ -247,8 +233,6 @@ if ($vms_running) {
 		case "hibernate":
 			exec ('virsh start "'.$vm.'"'." 2>&1", $vm_output) ;
 			if ($logging == "yes") snap_manager_log("VM ".$vm.' State is :'.$vm_state[$vm]." Being Woken");
-			break ;
-		default:
 			break ;
 		}				
  }	
@@ -301,24 +285,19 @@ if ($schedule["Removal"]!="no") {
 $parents=subvol_parents() ;
 $parent=$parents[$subvol]["vol"].'/' ;
 $lines[]=$parent ;
-if ($parent == "/") {
-	$subvol_removal = substr($subvol,0,-1) ;
-	$parents[$subvol_removal]["vol"] = $subvol_removal ;
-	$parent = $subvol ;
-} else $subvol_removal =  $subvol ;
 exec(' df -t btrfs --output="target" ',$df);
 
 $list = build_list3($df) ;
 
-$list=$list[$parents[$subvol_removal]["vol"]][$subvol_removal]["subvolume"] ;
+$list=$list[$parents[$subvol]["vol"]][$subvol]["subvolume"] ;
 
 if ($tag != "") {
 
 $snaps=remove_tags($list, $tag) ;
-} else $snaps = $list??[]  ;
+} else $snaps = $list ;
 $snaps=array_reverse($snaps) ;
 
-if ($logging == "yes") snap_manager_log('Tag: '.$tag.' Count: '.count($snaps).' Occurences: '.$schedule["occurences"].' Days: '.$schedule["days"].' Percentage:'.$schedule["volumeusage"]." For ".$arg1." Slot:".$slot) ;
+if ($logging == "yes") snap_manager_log('Tag: '.$tag.' Count: '.count($snaps).' Occurences: '.$schedule["occurences"].' Days: '.$schedule["days"].' Percentage:'.$schedule["volumeusage"]) ;
 
 
 
@@ -369,13 +348,13 @@ if ($schedule["volumeusage"] > 0)
 
 	$dryrunsize =0;
 	
-	$freespace = disk_free_space($parents[$subvol_removal]["vol"]) ;
-	$totalspace = disk_total_space($parents[$subvol_removal]["vol"]) ;
+	$freespace = disk_free_space($parents[$subvol]["vol"]) ;
+	$totalspace = disk_total_space($parents[$subvol]["vol"]) ;
 	$usedspace =  $spacepostdelete = ($totalspace - $freespace);
 	
   	foreach($snaps as $path=>$snap) {
 		$percent = "" ;
-		$totalspace = disk_total_space($parents[$subvol_removal]["vol"]) ;
+		$totalspace = disk_total_space($parents[$subvol]["vol"]) ;
 		if ($schedule["Removal"] == "dry")
 		{
 			$percent = round(($spacepostdelete / $totalspace * 100) , 0) ;
@@ -383,9 +362,9 @@ if ($schedule["volumeusage"] > 0)
 		else {
 			$percentdf =array() ;
 			#shell_exec("df | grep /mnt/cache | awk '/[0-9]%/{print $(NF-1)}' | sed 's/%//'",$percentdf,$error)  ;	
-			exec("df | grep ".$parents[$subvol_removal]["vol"]." | awk '/[0-9]%/{print $(NF-1)}' | sed 's/%//'"  ,$percentdfv,$error)  ;	 
+			exec("df | grep ".$parents[$subvol]["vol"]." | awk '/[0-9]%/{print $(NF-1)}' | sed 's/%//'"  ,$percentdfv,$error)  ;	 
 			
-			$freespace = disk_free_space($parents[$subvol_removal]["vol"]) ;
+			$freespace = disk_free_space($parents[$subvol]["vol"]) ;
 			$usedspace = ($totalspace - $freespace);
 			$percent = round(($usedspace / $totalspace * 100) , 0) ;
 			$percentdf=$percentdfv[0] ;

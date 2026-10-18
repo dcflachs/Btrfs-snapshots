@@ -14,14 +14,14 @@ Title="Edit Snap Schedule"
  * all copies or substantial portions of the Software.
  */
 
-$plugin = "snapshots";
+$plugin = "snapshots-btrfs";
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 $translations = file_exists("$docroot/webGui/include/Translations.php");
 require_once "$docroot/plugins/$plugin/include/Legacy.php";
 require_once "$docroot/plugins/dynamix.vm.manager/include/libvirt_helpers.php";
 ?>
 <?if (! $translations):?>
-<?eval('?>'.parse_file("$docroot/plugins/$plugin/SnapshotSchedule.page"))?>
+<?eval('?>'.parse_file("$docroot/plugins/$plugin/SnapshotSchedule-BTRFS.page"))?>
 <?else:?>
 <?
 require_once("plugins/{$plugin}/include/lib.php");

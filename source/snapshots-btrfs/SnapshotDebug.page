@@ -1,7 +1,7 @@
-Menu="Snapshots:10"
+Menu="Snapshots-BTRFS:10"
 Title="Debug"
 icon="fa-file"
-Cond="shell_exec('< /boot/config/plugins/snapshots/snapshots.cfg grep debug | grep true')"
+Cond="shell_exec('< /boot/config/plugins/snapshots-btrfs/snapshots-btrfs.cfg grep debug | grep true')"
 ---
 <?PHP
 /* Copyright 2020-2020, Simon Fairweather
@@ -13,7 +13,7 @@ Cond="shell_exec('< /boot/config/plugins/snapshots/snapshots.cfg grep debug | gr
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-$plugin = "snapshots";
+$plugin = "snapshots-btrfs";
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 $translations = file_exists("$docroot/webGui/include/Translations.php");
 require_once "$docroot/plugins/$plugin/include/Legacy.php";
@@ -23,7 +23,7 @@ require_once "$docroot/plugins/$plugin/include/Legacy.php";
 <?else:?>
 <?
 /* read translations */
-parse_plugin('snapshots');
+parse_plugin('snapshots-btrfs');
 global $btrfs_line ;
 ?>
 
@@ -93,7 +93,7 @@ table tr td.thin{line-height:8px;height:8px}
 
 <script>
 $(function(){
-$('#db1').load('/plugins/snapshots/include/snapshots.php',{table:'db1'});  
+$('#db1').load('/plugins/snapshots-btrfs/include/snapshots.php',{table:'db1'});  
 });
 
 

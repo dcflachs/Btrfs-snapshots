@@ -6,4 +6,4 @@ if [ -z ${DOCROOT} ];then
 fi
 
 # Copy config files to ram file system.
-${DOCROOT}/plugins/snapshots/scripts/copy_config.sh
+${DOCROOT}/plugins/snapshots-btrfs/scripts/copy_config.sh

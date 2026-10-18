@@ -9,7 +9,7 @@
  * all copies or substantial portions of the Software.
  */
 
-$plugin = "snapshots";
+$plugin = "snapshots-btrfs";
 $docroot = $docroot ?: @$_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 $disks = @parse_ini_file("$docroot/state/disks.ini", true);
 $VERBOSE=FALSE; 
@@ -208,11 +208,11 @@ function set_subvol_schedule($sn, $val) {
 	save_ini_file($config_file, $config);
 	#save_json_file($config_file_json, $config_json) ;
 	if ($config[$sn]["snapscheduleenabled"] == "yes") {
-	$cron = "# Generated snapshot schedule for:$sn\n".$val["cron"]." /usr/local/emhttp/plugins/snapshots/include/snapping.php \"$sn\" > /dev/null 2>&1 \n\n"; }
+	$cron = "# Generated snapshot schedule for:$sn\n".$val["cron"]." /usr/local/emhttp/plugins/snapshots-btrfs/include/snapping.php \"$sn\" > /dev/null 2>&1 \n\n"; }
 	else {
 	$cron="" ;
 	}
-	parse_cron_cfg("snapshots", urlencode($sn), $cron);
+	parse_cron_cfg("snapshots-btrfs", urlencode($sn), $cron);
 
 	return (isset($config[$sn][$var])) ? $config[$sn] : FALSE;
 }
@@ -321,12 +321,12 @@ function set_subvol_schedule_json($sn, $val, $schedule_seq=0) {
 
 	save_json_file($config_file_json, $config) ;
 	if ($config[$sn][$schedule_seq]["snapscheduleenabled"] == "yes" && $rund !="") {
-	$cron = "# Generated snapshot schedule for:$sn\n".$val["cron"]." /usr/local/emhttp/plugins/snapshots/include/snapping.php \"$sn\" \"$schedule_seq\" > /dev/null 2>&1 \n\n"; }
+	$cron = "# Generated snapshot schedule for:$sn\n".$val["cron"]." /usr/local/emhttp/plugins/snapshots-btrfs/include/snapping.php \"$sn\" \"$schedule_seq\" > /dev/null 2>&1 \n\n"; }
 	else {
 	$cron="" ;
 	}
 	$file=$sn."Slot".$schedule_seq ;
-	parse_cron_cfg("snapshots", urlencode($file), $cron);
+	parse_cron_cfg("snapshots-btrfs", urlencode($file), $cron);
 
 	return $schedule_seq ;
 }

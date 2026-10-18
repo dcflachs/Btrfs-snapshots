@@ -1,7 +1,7 @@
 #!/bin/bash
 [ -z "$OUTPUT_DIR" ] && echo "Output Folder not set" && exit 1
 
-PLUGIN_NAME="snapshots"
+PLUGIN_NAME="snapshots-btrfs"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="/usr/local/emhttp/plugins"
 TMP_DIR="/tmp/${PLUGIN_NAME}_"$(echo $RANDOM)""

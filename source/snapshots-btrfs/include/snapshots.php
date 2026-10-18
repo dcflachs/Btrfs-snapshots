@@ -8,14 +8,14 @@
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
-$plugin = "snapshots";
+$plugin = "snapshots-btrfs";
 $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 $translations = file_exists("$docroot/webGui/include/Translations.php");
 #ini_set('error_reporting', E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 
 if ($translations) {
 	/* add translations */
-	$_SERVER['REQUEST_URI'] = 'snapshots';
+	$_SERVER['REQUEST_URI'] = 'snapshots-btrfs';
 	require_once "$docroot/webGui/include/Translations.php";
 } else {
 	/* legacy support (without javascript) */
@@ -23,7 +23,7 @@ if ($translations) {
 	require_once "$docroot/plugins/$plugin/include/Legacy.php";
 }
 
-require_once "plugins/snapshots/include/lib.php";
+require_once "plugins/snapshots-btrfs/include/lib.php";
 require_once("webGui/include/Helpers.php");
 
 function make_button($text, $function, $entry,$disabled="") {
@@ -127,9 +127,9 @@ case 'sv2':
          $slotcount=count($slots) ;
 
       echo "</td><td> ".make_button("Create Snapshot", "create_snapshot", $parm)."</td>" ;
-      echo "<td><a href=\"/Snapshots/SnapshotEditSettings?s=".urlencode($path)."\"><i class='fa fa-cog' title=\""._('Settings').$path."\"></i></a></td>" ;
+      echo "<td><a href=\"/Snapshots-BTRFS/SnapshotEditSettings?s=".urlencode($path)."\"><i class='fa fa-cog' title=\""._('Settings').$path."\"></i></a></td>" ;
       if ($slotcount<1) {
-         echo "<td><i class=\"fa fa-circle orb grey-orb middle\" title=\"Undefined\"></i><a href=\"/Snapshots/SnapshotSchedule?s=".urlencode($path)."&seq=".urlencode("99")."\"><i class='fa fa-plus' title=\""._('Add Schedule Slot')."\"></i></a></td>" ;
+         echo "<td><i class=\"fa fa-circle orb grey-orb middle\" title=\"Undefined\"></i><a href=\"/Snapshots-BTRFS/SnapshotSchedule?s=".urlencode($path)."&seq=".urlencode("99")."\"><i class='fa fa-plus' title=\""._('Add Schedule Slot')."\"></i></a></td>" ;
       } else {
       echo "<td></td>" ;
       }
@@ -187,11 +187,11 @@ case 'sv2':
 
 
       $seq=$slot ;
-      echo "<td><a href=\"/Snapshots/SnapshotSchedule?s=".urlencode($path)."&seq=".urlencode($seq)."\"><i class='fa fa-clock-o' title=\""._('Schedule').$path."\"></i></a></td>" ;
+      echo "<td><a href=\"/Snapshots-BTRFS/SnapshotSchedule?s=".urlencode($path)."&seq=".urlencode($seq)."\"><i class='fa fa-clock-o' title=\""._('Schedule').$path."\"></i></a></td>" ;
 
       echo "<td><i class=\"fa fa-circle orb ".$colour."-orb middle\" title=\"".$colour_lable."\"></i>" ;
 
-      if ($slotcount <7) echo "<a href=\"/Snapshots/SnapshotSchedule?s=".urlencode($path)."&seq=".urlencode("99")."\"><i class='fa fa-plus' title=\""._('Add Schedule Slot')."\"></i></a>" ;
+      if ($slotcount <7) echo "<a href=\"/Snapshots-BTRFS/SnapshotSchedule?s=".urlencode($path)."&seq=".urlencode("99")."\"><i class='fa fa-plus' title=\""._('Add Schedule Slot')."\"></i></a>" ;
       echo "</td>" ;
       echo "<td></td></tr>" ;
       }
@@ -277,7 +277,7 @@ EOT;
       
         exec(' df -t btrfs --output="target" ',$targetcli);
           
-            $list = @parse_ini_file("/tmp/snapshots/config/subvolsch.cfg", true) ;
+            $list = @parse_ini_file("/tmp/snapshots-btrfs/config/subvolsch.cfg", true) ;
           $list=get_snapshots("/mnt/cache/vol") ;
           $list=build_list3($targetcli) ;
           $config_file = $GLOBALS["paths"]["subvol_schedule"];
@@ -296,7 +296,7 @@ EOT;
       case 'run_schedule':
          $subvol = urldecode(($_POST['subvol']));
          $slot = urldecode(($_POST['slot']));
-         exec('/usr/local/emhttp/plugins/snapshots/include/snapping.php "'.$subvol.'" "'.$slot.'" > /dev/null 2>&1 ', $result, $error) ;
+         exec('/usr/local/emhttp/plugins/snapshots-btrfs/include/snapping.php "'.$subvol.'" "'.$slot.'" > /dev/null 2>&1 ', $result, $error) ;
     
          snap_manager_log('Manual Run "'.$subvol.'" '.$error.' '.$result[0]) ;
          echo json_encode(TRUE);
@@ -312,7 +312,7 @@ EOT;
             save_json_file($config_file_json, $config) ;
             $cron="" ;
 	      	$file=$subvol."Slot".$slot ;
-	         parse_cron_cfg("snapshots", urlencode($file), $cron);
+	         parse_cron_cfg("snapshots-btrfs", urlencode($file), $cron);
             #if
             snap_manager_log('Removed Schedule Slot "'.$subvol.'" '.$slot.' '.$error.' '.$result[0]) ;
             echo json_encode(TRUE);
@@ -450,7 +450,7 @@ EOT;
                        $newSchedule[$script] = $scriptSchedule;
                        
                        if ( $scriptSchedule['frequency'] == "custom" && $scriptSchedule['custom'] ) {
-                         $cronSchedule .= trim($scriptSchedule['custom'])." /usr/local/emhttp/plugins/snapshots/include/snapping.php $vol > /dev/null 2>&1\n";
+                         $cronSchedule .= trim($scriptSchedule['custom'])." /usr/local/emhttp/plugins/snapshots-btrfs/include/snapping.php $vol > /dev/null 2>&1\n";
                        }
                      }
                      file_put_contents("/boot/config/plugins/user.scripts/schedule.json",json_encode($newSchedule,JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));

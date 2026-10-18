@@ -40,13 +40,13 @@ jobs:
     - name: Upload Package 
       uses: actions/upload-artifact@v7
       with:
-        path: ./archive/snapshots-*txz
+        path: ./archive/snapshots-btrfs-*txz
         archive: false
 
     - name: Upload Hash
       uses: actions/upload-artifact@v7
       with:
-        path: ./archive/snapshots-*md5
+        path: ./archive/snapshots-btrfs-*md5
         archive: false
 
     - name: Set Release ENV Variables On Manual
@@ -71,7 +71,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           body_path: ./archive/release_info
           tag_name:  ${{env.RELEASE_TAG_NAME}}
-          name: Snapshots Package ${{env.RELEASE_TAG_NAME}}
+          name: Snapshots-BTRFS Package ${{env.RELEASE_TAG_NAME}}
           draft: true
           files: |
             archive/snapshots*
